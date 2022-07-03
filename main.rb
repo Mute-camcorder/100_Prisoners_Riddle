@@ -11,20 +11,37 @@
 # fails to find their number then all prisoners are executed.
 
 require './prisoner.rb'
+require './prison.rb'
 
+class Simulation
 
-class Prison
+    @@simulation_length = 1_000_000
+
     def initialize
-        # Each index of the array represents a box. The value at that index is the ID of a prisoner
-        @randomised_boxes = (1..100).to_a.shuffle
-        @prisoners = (1..100).map { |x| Prisoner.new x }
+        @prisons = (1..@@simulation_length).map { Prison.new }
+        puts "Generated [#{@@simulation_length}] Prisons."
     end
 
-    def challenge_succeeded?(search_method)
-        prisoner_results = @prisoners.map { |p| p.send(test_method, @randomised_boxes) }
-        prisoner_results.all?
+    def simulate(search_method)
+        results = @prisons.map { |p| p.challenge_succeeded?(search_method) }
+        passed = results.count(true)
+        pass_rate = passed.fdiv(results.length) * 100
+        puts "#{passed} prisons succeeded out of #{results.length}. For a pass rate of #{pass_rate.round(2)}%"
     end
 
-    attr_accessor :prisoners
-    attr_accessor :randomised_boxes
+    def simulate_random_search
+        puts "Beginning random search challenge"
+        self.simulate :found_in_random_search?
+    end
+
+    def simulate_cycle_search
+        puts "Beginning cycle search challenge"
+        self.simulate :found_in_cycle?
+    end
+
 end
+
+
+simulation = Simulation.new
+simulation.simulate_random_search
+simulation.simulate_cycle_search

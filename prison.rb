@@ -6,8 +6,16 @@ class Prison
     end
 
     def challenge_succeeded?(search_method)
-        prisoner_results = @prisoners.map { |p| p.send(search_method, @randomised_boxes) }
-        prisoner_results.all?
+        for prisoner in @prisoners do
+            result = prisoner.send(search_method, @randomised_boxes)
+            if result == false
+                # If one fails, they all fail
+                return false
+            end
+        end
+
+        # Base case for when they all passed
+        return true
     end
 
     attr_accessor :prisoners

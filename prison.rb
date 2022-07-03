@@ -1,8 +1,10 @@
 class Prison
+    @@population_size = 100
+
     def initialize
         # Each index of the array represents a box. The value at that index is the ID of a prisoner
-        @randomised_boxes = (1..100).to_a.shuffle
-        @prisoners = (1..100).map { |x| Prisoner.new x }
+        @randomised_boxes = (1..@@population_size).to_a.shuffle
+        @prisoners = (1..@@population_size).map { |x| Prisoner.new x }
     end
 
     def challenge_succeeded?(search_method)

@@ -7,13 +7,11 @@ class Simulation
 
     @@simulation_length = 1_000_000
 
-    def initialize
-        @prisons = (1..@@simulation_length).map { Prison.new }
-        puts "Generated [#{@@simulation_length}] Prisons."
-    end
-
     def simulate(search_method)
-        results = @prisons.map { |p| p.challenge_succeeded?(search_method) }
+        results = (1..@@simulation_length).map do
+            prison = Prison.new
+            prison.challenge_succeeded?(search_method)
+        end
         passed = results.count(true)
         pass_rate = passed.fdiv(results.length) * 100
         puts "#{passed} prisons succeeded out of #{results.length}. For a pass rate of #{pass_rate.round(2)}%"
